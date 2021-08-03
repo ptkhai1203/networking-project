@@ -39,12 +39,10 @@ def getCovidFromWiki():
     if flag:
         database.to_json('database.json')
 
-
 def getCovidFromFile():
     global dfInfo
     dfInfo = pd.read_json('database.json', dtype='str')
-
-
+    
 def getData():
     with open('data.txt', 'r') as f:
         lines = f.readlines()
@@ -85,7 +83,6 @@ def accept_incoming_connections():
         print("%s - %s has connected" % client_address)
         addresses[client] = client_address
         Thread(target = handle_client, args = (client, client_address)).start()
-
         #if (# Kiem tra hien tai co bang 8g ):
             # goi ham cap nhat database()
 
@@ -170,9 +167,10 @@ def handle_client(client, client_address):  # Takes client socket as argument
             query["Tỉnh thành"] = tt
             query["Ngày"] = _msg[idx + 1:]
             print(query["Tỉnh thành"], query["Ngày"])
+            #sv_list.insert(tkinter.END, 'Client request')
             res = dfInfo[(dfInfo["Tỉnh thành"] == query["Tỉnh thành"]) & (dfInfo["Ngày"] == query["Ngày"])]
             if not res.empty:
-                rep = "Tỉnh thành: " + str(res['Tỉnh thành'].values[0]) + '\n' + "Số ca nhiễm: " + str(res['Ca nhiễm'].values[0]) + '\n' + "Số ca đang điều trị: " + str(res['Đang điều trị'].values[0]) + '\n' + "Khác: " + str(res['Khác'].values[0]) + '\n' + "Số ca hồi phục: " + str(res['Hồi phục'].values[0]) + '\n' + "Số ca tử vong: " + str(res['Tử vong'].values[0])
+                rep = "Tỉnh thành: " + str(res['Tỉnh thành'].values[0]) + '\n' + "Số ca nhiễm: " + str(res['Ca nhiễm'].values[0]) + '\n' + "Số ca đang điều trị: " + str(res['Đang điều trị'].values[0]) + '\n' + "Khác: " + str(res['Khác'].values[0]) + '\n' + "Số ca hồi phục: " + str(res['Hồi phục'].values[0]) + '\n' + "Số ca tử vong: " + str(res['Tử vong'].values[0]) + '\n' + "Ngày: " + str(res['Ngày'].values[0])
             else :
                 rep = "Invalid Data"
             #msg1 = input("Replied to " + name + ': ')
@@ -210,27 +208,27 @@ ADDR = (HOST, PORT)
 SERVER = socket(AF_INET, SOCK_STREAM)
 SERVER.bind(ADDR)
 
+server_GUI = tkinter.Tk()
+server_GUI.title('Get COVID Information - Server')
+server_GUI.geometry('600x625')
+
 if __name__ == "__main__":
     SERVER.listen(10)
 
-   # server_GUI = tkinter.Tk()
-    #server_GUI.title("Get COVID Information - Server")
-    #server_GUI.geometry('600x625')
+    frame = tkinter.Frame(server_GUI)
+    scroll = tkinter.Scrollbar(frame)
+    sv_list = tkinter.Listbox(frame, height = 35, width = 125, yscrollcommand = scroll.set)
+    scroll.pack(side = tkinter.RIGHT, fill = tkinter.Y)
+    sv_list.pack(side = tkinter.LEFT, fill = tkinter.BOTH)
+    sv_list.pack()
+    frame.pack()
+    #print('Waiting for connection from Client')
+    sv_list.insert(tkinter.END, 'Waiting for connection from Client!')
 
-    #frame = tkinter.Frame(server_GUI)
-    #scroll = tkinter.Scrollbar(frame)
-    #sv_list = tkinter.Listbox(frame, height = 35, width = 125, yscrollcommand = scroll.set)
-    #scroll.pack(side = tkinter.RIGHT, fill = tkinter.Y)
-    #sv_list.pack(side = tkinter.LEFT, fill = tkinter.BOTH)
-    #sv_list.pack()
-    #frame.pack()
-
-    #sv_list.insert(tkinter.END, 'Waiting for connection from Client!')
-    print('Waiting for connection from Client')
-    
     ACCEPT_THREAD = Thread(target = accept_incoming_connections)
-    
     ACCEPT_THREAD.start()
+    while True:
+        server_GUI.update_idletasks()
+        server_GUI.update()
     ACCEPT_THREAD.join()
-    #server_GUI.mainloop()
     SERVER.close()

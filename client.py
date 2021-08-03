@@ -25,12 +25,18 @@ def send(event = None):  # event is passed by binders
     """Handles sending of messages"""
     msg = my_msg.get()
     my_msg.set("")  # Clears input field
-    client_socket.send(bytes(msg, "utf8"))
+    try:
+        client_socket.send(bytes(msg, "utf8"))
+    except:
+        print('Server disconnected. This application will close after 5 seconds')
+        time.sleep(5)
+        client_socket.close()
+        top.quit()
     if msg == "{quit}":
         client_socket.close()
         top.quit()
 
-def on_closing(event=None):
+def on_closing(event = None):
     """This function is to be called when the window is closed"""
     my_msg.set("{quit}")
     send()
@@ -38,10 +44,20 @@ def on_closing(event=None):
 def validateLogin(username, password):
     msg = username.get()
     username.set("")
-    client_socket.send(bytes(msg + ' 1', "utf8"))
+    try:
+        client_socket.send(bytes(msg + ' 1', "utf8"))
+    except:
+        client_socket.close()
+        tkWindow.destroy()
+        return
     msg = password.get()
     password.set("")
-    client_socket.send(bytes(msg, "utf8"))
+    try:
+        client_socket.send(bytes(msg, "utf8"))
+    except:
+        client_socket.close()
+        tkWindow.destroy()
+        return
     global status_login
     status_login = client_socket.recv(BUFSIZ).decode("utf8")
     if status_login == "success":
@@ -54,10 +70,20 @@ def validateLogin(username, password):
 def validateRegister(username, password):
     msg = username.get()
     username.set("")
-    client_socket.send(bytes(msg + ' 2', "utf8"))
+    try:
+        client_socket.send(bytes(msg + ' 2', "utf8"))
+    except:
+        client_socket.close()
+        tkWindow.destroy()
+        return
     msg = password.get()
     password.set("")
-    client_socket.send(bytes(msg, "utf8"))
+    try:
+        client_socket.send(bytes(msg, "utf8"))
+    except:
+        client_socket.close()
+        tkWindow.destroy()
+        return
     global status_regis
     status_regis = client_socket.recv(BUFSIZ).decode("utf8")
     if status_regis == "success":
@@ -94,7 +120,7 @@ validateLogin = partial(validateLogin, username, password)
 validateRegister = partial(validateRegister, username, password)
 
 loginButton = tkinter.Button(tkWindow, text = "Login", command = validateLogin).grid(row = 4, column = 0)
-regisButton = tkinter.Button(tkWindow, text = "Register", command = validateRegister).grid(row = 4, column = 15)
+regisButton = tkinter.Button(tkWindow, text = "Register", command = validateRegister).grid(row = 4, column = 1)
 
 tkWindow.mainloop()
 
