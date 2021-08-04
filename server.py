@@ -83,14 +83,18 @@ def accept_incoming_connections():
         print("%s - %s has connected" % client_address)
         addresses[client] = client_address
         Thread(target = handle_client, args = (client, client_address)).start()
-        #if (# Kiem tra hien tai co bang 8g ):
-            # goi ham cap nhat database()
+        now = datetime.datetime.now().time()
+        if(now.minute == 0 and now.second == 0):
+            getCovidFromWiki()
 
 def handle_client(client, client_address):  # Takes client socket as argument
     """Handles a single client connection"""
     getCovidFromWiki()
     getCovidFromFile()
     while True:
+        now = datetime.datetime.now().time()
+        if(now.minute == 0 and now.second == 0):
+            getCovidFromWiki()
         # Phần nhập Username và in ra
         try:
             name = client.recv(BUFSIZ).decode("utf8")
@@ -147,6 +151,9 @@ def handle_client(client, client_address):  # Takes client socket as argument
     clients[client] = name
 
     while True:
+        now = datetime.datetime.now().time()
+        if(now.minute == 0 and now.second == 0):
+            getCovidFromWiki()
         try:
             msg = client.recv(BUFSIZ)
         except:
