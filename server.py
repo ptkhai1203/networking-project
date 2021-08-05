@@ -10,12 +10,12 @@ import pandas as pd
 import datetime as dt
 
 def getCovidFromWiki():
-    database = pd.read_json('database.json', dtype='str')
+    database = pd.read_json('database.json', dtype = 'str')
 
     url = "https://vi.wikipedia.org/wiki/B%E1%BA%A3n_m%E1%BA%ABu:D%E1%BB%AF_li%E1%BB%87u_%C4%91%E1%BA%A1i_d%E1%BB%8Bch_COVID-19/S%E1%BB%91_ca_nhi%E1%BB%85m_theo_t%E1%BB%89nh_th%C3%A0nh_t%E1%BA%A1i_Vi%E1%BB%87t_Nam#cite_note-1"
     getUrl = requests.get(url)
     soup = BeautifulSoup(getUrl.text, 'html.parser')
-    dataTable = soup.find('table', class_="wikitable")
+    dataTable = soup.find('table', class_ = "wikitable")
     web_data = pd.read_html(str(dataTable))[0].astype('str')
     web_data.columns = ['Tỉnh thành', 'Ca nhiễm', 'Đang điều trị', 'Khác', 'Hồi phục', 'Tử vong']
     df_new = web_data[:63]
@@ -27,10 +27,10 @@ def getCovidFromWiki():
 
     flag = False
     if today_string not in set(database['Ngày'].values):
-        database = pd.concat([database, df_new], sort=False).reset_index(drop=True)
+        database = pd.concat([database, df_new], sort = False).reset_index(drop = True)
         flag = True
     else:
-        is_same = df_new.equals(df_old.reset_index(drop=True))
+        is_same = df_new.equals(df_old.reset_index(drop = True))
         if not is_same:
             database[-63:] = df_new
             flag = True
@@ -41,7 +41,7 @@ def getCovidFromWiki():
 
 def getCovidFromFile():
     global dfInfo
-    dfInfo = pd.read_json('database.json', dtype='str')
+    dfInfo = pd.read_json('database.json', dtype = 'str')
     
 def getData():
     with open('data.txt', 'r') as f:
@@ -173,7 +173,7 @@ def handle_client(client, client_address):  # Takes client socket as argument
                 tt = map_alias[tt]
             query["Tỉnh thành"] = tt
             query["Ngày"] = _msg[idx + 1:]
-            print(name + ' request: ', query["Tỉnh thành"], query["Ngày"])
+            print(name + ' request:', query["Tỉnh thành"], query["Ngày"])
             #sv_list.insert(tkinter.END, 'Client request')
             res = dfInfo[(dfInfo["Tỉnh thành"] == query["Tỉnh thành"]) & (dfInfo["Ngày"] == query["Ngày"])]
             if not res.empty:
@@ -196,11 +196,11 @@ clients = {}
 addresses = {}
 map_alias = {"AG": "An Giang", "BV": "Bà Rịa - Vũng Tàu", "BL": "Bạc Liêu", "BK": "Bắc Kạn", "BG": "Bắc Giang",
 "BN": "Bắc Ninh", "BT": "Bến Tre", "BD": "Bình Dương", "BDi": "Bình Định", "BP": "Bình Phước", "BTh": "Bình Thuận",
-"CM": "Cà Mau", "CB": "Cao Bằng", "CT": "Cần Thơ", "ĐNa": "Đà Nẵng", "ĐL": "Đắk Lắk", "ĐNo": "Đắk Nông", "ĐB": "Điện Biên",
-"ĐN": "Đồng Nai", "ĐT": "Đồng Tháp", "GL": "Gia Lai", "HG": "Hà Giang", "HNa": "Hà Nam", "HN": "Hà Nội", "HT": "Hà Tĩnh",
+"CM": "Cà Mau", "CB": "Cao Bằng", "CT": "Cần Thơ", "DNa": "Đà Nẵng", "DL": "Đắk Lắk", "DNo": "Đắk Nông", "DB": "Điện Biên",
+"DN": "Đồng Nai", "DT": "Đồng Tháp", "GL": "Gia Lai", "HG": "Hà Giang", "HNa": "Hà Nam", "HN": "Hà Nội", "HT": "Hà Tĩnh",
 "HD": "Hải Dương", "HP": "Hải Phòng", "HGi": "Hậu Giang", "HB": "Hòa Bình", "SG": "TP. Hồ Chí Minh", "HY": "Hưng Yên",
-"KH": "Khánh Hoà", "KG": "Kiên Giang", "KT": "Kon Tum", "LC": "Lai Châu", "LS": "Lạng Sơn", "LCa": "Lào Cai", "LĐ": "Lâm Đồng",
-"LA": "Long An", "NĐ": "Nam Định", "NA": "Nghệ An", "NB": "Ninh Bình", "NT": "Ninh Thuận", "PT": "Phú Thọ", "PY": "Phú Yên",
+"KH": "Khánh Hoà", "KG": "Kiên Giang", "KT": "Kon Tum", "LC": "Lai Châu", "LS": "Lạng Sơn", "LCa": "Lào Cai", "LD": "Lâm Đồng",
+"LA": "Long An", "ND": "Nam Định", "NA": "Nghệ An", "NB": "Ninh Bình", "NT": "Ninh Thuận", "PT": "Phú Thọ", "PY": "Phú Yên",
 "QB": "Quảng Bình", "QNa": "Quảng Nam", "QNg": "Quảng Ngãi", "QN": "Quảng Ninh", "QT": "Quảng Trị", "ST": "Sóc Trăng", "SL": "Sơn La",
 "TN": "Tây Ninh", "TB": "Thái Bình", "TNg": "Thái Nguyên", "TH": "Thanh Hóa", "TTH": "Thừa Thiên – Huế", "TG": "Tiền Giang",
 "TV": "Trà Vinh", "TQ": "Tuyên Quang", "VL": "Vĩnh Long", "VP": "Vĩnh Phúc", "YB": "Yên Bái", "Thừa Thiên - Huế": "Thừa Thiên – Huế"}
