@@ -139,10 +139,10 @@ top.title("Get COVID application")
 top.geometry('600x625')
 
 messages_frame = tkinter.Frame(top)
-my_msg = tkinter.StringVar()  # For the messages to be sent.
-# my_msg.set("Type your messages here.")
-scrollbar = tkinter.Scrollbar(messages_frame)  # To navigate through past messages.
-# Following will contain the messages.
+my_msg = tkinter.StringVar()  # For the messages to be sent
+scrollbar = tkinter.Scrollbar(messages_frame)  # To navigate through past messages
+
+# Following will contain the messages
 msg_list = tkinter.Listbox(messages_frame, height = 35, width = 125, yscrollcommand = scrollbar.set)
 scrollbar.pack(side = tkinter.RIGHT, fill = tkinter.Y)
 msg_list.pack(side = tkinter.LEFT, fill = tkinter.BOTH)
@@ -157,6 +157,6 @@ send_button.pack()
 
 top.protocol("WM_DELETE_WINDOW", on_closing)
 
-receive_thread = Thread(target=receive)
+receive_thread = Thread(target = receive)
 receive_thread.start()
 tkinter.mainloop()
