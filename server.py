@@ -99,13 +99,13 @@ def handle_client(client, client_address):  # Takes client socket as argument
         try:
             name = client.recv(BUFSIZ).decode("utf8")
         except:
-            print(name + ' disconnected')
+            print(name + ' Disconnected')
             return
         # Phần nhập Password và in ra
         try:
             password = client.recv(BUFSIZ).decode("utf8")
         except:
-            print(name + ' disconnected')
+            print(name + ' Disconnected')
             return
 
         status = name[len(name) - 1: len(name)]
@@ -124,7 +124,7 @@ def handle_client(client, client_address):  # Takes client socket as argument
                         try:
                             client.send(bytes("success", "utf8"))
                         except:
-                            print(name + ' disconnected')
+                            print(name + ' Disconnected')
                             break
             if ok == True:
                 break
@@ -132,7 +132,7 @@ def handle_client(client, client_address):  # Takes client socket as argument
                 try:
                     client.send(bytes("unsuccess", "utf8"))
                 except:
-                    print(name + ' disconnected')
+                    print(name + ' Disconnected')
                     break
         elif status == "2":
             ok = True
@@ -157,12 +157,12 @@ def handle_client(client, client_address):  # Takes client socket as argument
         try:
             msg = client.recv(BUFSIZ)
         except:
-            print(name + " disconnected")
+            print(name + " Disconnected")
             break
         try:
             client.send(bytes(name + ": ", "utf8") + msg)
         except:
-            print(name + " disconnected")
+            print(name + " Disconnected")
             break
         if msg != bytes("{quit}", "utf8"):
             query = {}
@@ -189,7 +189,7 @@ def handle_client(client, client_address):  # Takes client socket as argument
                 del clients[client]
                 break
             except:
-                print(name + " disconnected")
+                print(name + " Disconnected")
                 break
 
 clients = {}
